@@ -1,0 +1,45 @@
+version: v1beta11
+
+
+# `deployments` tells DevSpace how to deploy this project
+deployments:
+- name: mongo
+  helm:
+    componentChart: true
+    values:
+      containers:
+      - image: bitnami/mongodb:latest
+        volumeMounts:
+        - containerPath: /bitnami/mongodb
+          volume:
+            name: mongo-data
+            readOnly: false
+        env:
+        - name: MONGODB_ROOT_USER
+          value: root
+        - name: MONGODB_ROOT_PASSWORD
+          value: foobar
+        - name: MONGODB_USERNAME
+          value: test_user
+        - name: MONGODB_PASSWORD
+          value: foobar 
+        - name: MONGODB_DATABASE
+          value: test
+
+      service:
+        ports:
+        - port: 27017
+      ingress:
+        rules:
+        - host: mongo.awesome.test
+          servicePort: 27017
+          serviceName: mongo
+      volumes:
+      - name: mongo-data
+        size: "2Gi"
+dev:
+  ports:
+  - imageSelector: mongo # Select the Pod that runs our `${IMAGE}`
+    forward:
+    - port: 27017
+      remotePort: 27017

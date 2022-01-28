@@ -1,0 +1,34 @@
+version: v1beta11
+
+vars:
+- name: IMAGE
+  value: localstack/localstack
+
+# `deployments` tells DevSpace how to deploy this project
+deployments:
+- name: localstack
+  helm:
+    componentChart: true
+    values:
+      containers:
+      - image: ${IMAGE}
+        env:
+        - name: SERVICES
+          value: dynamodb,s3,sqs,sns,kinesis
+        - name: HOSTNAME_EXTERNAL
+          value: localstack
+        - name: HOSTNAME
+          value: localstack
+      service:
+        ports:
+        - port: 4566
+        - port: 4571
+
+dev:
+  ports:
+  - imageSelector: ${IMAGE} # Select the Pod that runs our `${IMAGE}`
+    forward:
+    - port: 4566
+      remotePort: 4566
+    - port: 4571
+      remotePort: 4571 
