@@ -4,14 +4,6 @@
 devspace deploy
 ```
 
-## Install LocalStack 
-<br>
-
-Follow [LocalStack AWS CLI](https://docs.localstack.cloud/integrations/aws-cli/#localstack-aws-cli-awslocal)
-
-
-# Usage
-
 ## Connect to container 
 
 Connect and forward ports by running: 
