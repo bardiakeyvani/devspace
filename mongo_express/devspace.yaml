@@ -1,0 +1,33 @@
+version: v1beta11
+
+
+# `deployments` tells DevSpace how to deploy this project
+deployments:
+- name: mongo-express
+  helm:
+    componentChart: true
+    values:
+      containers:
+      - image: mongo-express
+        env:
+        - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+          value: root
+        - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+          value: foobar
+        - name: ME_CONFIG_MONGODB_URL
+          value: mongodb://root:foobar@mongo:27017/
+
+      service:
+        ports:
+        - port: 8081
+      ingress:
+        rules:
+        - host: mongo-express.awesome.test
+          servicePort: 8081
+          serviceName: mongo-express
+dev:
+  ports:
+  - imageSelector: mongo-express # Select the Pod that runs our `${IMAGE}`
+    forward:
+    - port: 9081
+      remotePort: 8081
